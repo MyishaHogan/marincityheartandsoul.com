@@ -27,8 +27,9 @@
 
   .reader-wrapper { background: #111; padding: 32px 0; display: flex; flex-direction: column; align-items: center; gap: 20px; min-height: 600px; }
   .reader-label { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
-  #flipbook-container { position: relative; width: min(800px, 95vw); background: var(--white); box-shadow: 0 20px 80px rgba(0,0,0,0.6); overflow: hidden; }
-  #pdf-canvas { display: block; width: 100%; height: auto; }
+  #flipbook-container { position: relative; width: min(800px, 95vw); background: var(--white); box-shadow: 0 20px 80px rgba(0,0,0,0.6); overflow: auto; cursor: grab; }
+  #flipbook-container.grabbing { cursor: grabbing; }
+  #pdf-canvas { display: block; transform-origin: top left; transition: transform 0.2s; }
   .reader-controls { display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.07); border-radius: 40px; padding: 10px 24px; }
   .reader-btn { background: var(--teal); color: #ffffff !important; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
   .reader-btn:hover { background: var(--teal-light); }
@@ -113,6 +114,9 @@
       <button class="reader-btn" id="btn-prev" onclick="changePage(-1)" disabled>&#8592;</button>
       <span class="page-indicator" id="page-indicator">Page 1 of 1</span>
       <button class="reader-btn" id="btn-next" onclick="changePage(1)" disabled>&#8594;</button>
+      <button class="reader-btn" onclick="zoom(-0.25)" title="Zoom out">&#8722;</button>
+      <span class="page-indicator" id="zoom-indicator">100%</span>
+      <button class="reader-btn" onclick="zoom(0.25)" title="Zoom in">&#43;</button>
     </div>
     <div class="reader-action-btns">
       <a href="edition-may-2026.pdf" download class="action-btn action-btn-outline">&#8595; Download PDF</a>
@@ -224,6 +228,10 @@
 
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+  let currentZoom = 1.0;
+  const MIN_ZOOM = 0.5;
+  const MAX_ZOOM = 3.0;
+
   async function loadPDF() {
     try {
       pdfDoc = await pdfjsLib.getDocument(PDF_FILE).promise;
@@ -236,17 +244,25 @@
 
   async function renderPage(num) {
     const page = await pdfDoc.getPage(num);
-    const containerWidth = document.getElementById('flipbook-container').clientWidth;
+    const container = document.getElementById('flipbook-container');
+    const containerWidth = container.clientWidth;
     const viewport = page.getViewport({ scale: 1 });
-    const scale = containerWidth / viewport.width;
-    const scaledViewport = page.getViewport({ scale });
+    const baseScale = containerWidth / viewport.width;
+    const scaledViewport = page.getViewport({ scale: baseScale * currentZoom });
     canvas.width = scaledViewport.width;
     canvas.height = scaledViewport.height;
+    canvas.style.transform = '';
     await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise;
     currentPage = num;
     document.getElementById('page-indicator').textContent = 'Page ' + currentPage + ' of ' + totalPages;
+    document.getElementById('zoom-indicator').textContent = Math.round(currentZoom * 100) + '%';
     document.getElementById('btn-prev').disabled = currentPage <= 1;
     document.getElementById('btn-next').disabled = currentPage >= totalPages;
+  }
+
+  function zoom(delta) {
+    currentZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, currentZoom + delta));
+    if (pdfDoc) renderPage(currentPage);
   }
 
   function changePage(delta) {
@@ -254,9 +270,32 @@
     if (newPage >= 1 && newPage <= totalPages) renderPage(newPage);
   }
 
+  // Pinch to zoom on mobile
+  let lastDist = 0;
+  const container = document.getElementById('flipbook-container');
+  container.addEventListener('touchstart', e => { if (e.touches.length === 2) lastDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); });
+  container.addEventListener('touchmove', e => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      const delta = (dist - lastDist) * 0.005;
+      lastDist = dist;
+      zoom(delta);
+    }
+  }, { passive: false });
+
+  // Drag to pan when zoomed
+  let isDragging = false, startX, startY, scrollLeft, scrollTop;
+  container.addEventListener('mousedown', e => { isDragging = true; container.classList.add('grabbing'); startX = e.pageX - container.offsetLeft; startY = e.pageY - container.offsetTop; scrollLeft = container.scrollLeft; scrollTop = container.scrollTop; });
+  container.addEventListener('mouseleave', () => { isDragging = false; container.classList.remove('grabbing'); });
+  container.addEventListener('mouseup', () => { isDragging = false; container.classList.remove('grabbing'); });
+  container.addEventListener('mousemove', e => { if (!isDragging) return; e.preventDefault(); container.scrollLeft = scrollLeft - (e.pageX - container.offsetLeft - startX); container.scrollTop = scrollTop - (e.pageY - container.offsetTop - startY); });
+
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') changePage(1);
     if (e.key === 'ArrowLeft') changePage(-1);
+    if (e.key === '+' || e.key === '=') zoom(0.25);
+    if (e.key === '-') zoom(-0.25);
   });
 
   loadPDF();
