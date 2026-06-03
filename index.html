@@ -271,16 +271,18 @@
     try {
       const res = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        redirect: 'follow',
         body: JSON.stringify({ name, email, source: 'marincityheartandsoul.com' })
       });
-      if (res.ok) {
+      const text = await res.text();
+      const json = JSON.parse(text);
+      if (json.status === 'ok') {
         feedbackEl.className = 'sub-feedback success';
         feedbackEl.textContent = 'Welcome to the community, ' + name + '. Your first issue is on its way.';
         nameEl.value = '';
         emailEl.value = '';
       } else {
-        throw new Error('Server error');
+        throw new Error(json.message || 'Server error');
       }
     } catch(e) {
       feedbackEl.className = 'sub-feedback error';
