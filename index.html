@@ -247,7 +247,7 @@
  
   // ── Subscribe ──────────────────────────────────────────────────────
   // Replace this URL with your Google Apps Script web app URL when ready
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZZBx2tOfQkyb_o8JLEHDhVKdpw3zMC9SfkhXsGbzU9_ShAv-EVl-YFGRNbV1CCSbP5g/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-SKK4sltyBzauyn44gCQQrjotADyh4Y59RfPE3OQWB3q2fIJLbSoyMfd23SfYtOjBcw/exec';
  
   async function handleSubscribe(section) {
     const nameEl     = document.getElementById('name-' + section);
@@ -269,13 +269,9 @@
     btnEl.innerHTML = '<span class="spinner"></span>';
  
     try {
-      const res = await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        body: JSON.stringify({ name, email, source: 'marincityheartandsoul.com' })
-      });
-      const text = await res.text();
-      const json = JSON.parse(text);
+      const url = APPS_SCRIPT_URL + '?name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
+      const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+      const json = JSON.parse(await res.text());
       if (json.status === 'ok') {
         feedbackEl.className = 'sub-feedback success';
         feedbackEl.textContent = 'Welcome to the community, ' + name + '. Your first issue is on its way.';
