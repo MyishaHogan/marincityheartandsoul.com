@@ -1,3 +1,252 @@
+
+Claude finished the response
+
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Marin City Heart + Soul</title> <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,
+
+pasted
+
+I need to edit the following code:
+
+9:41 AM
+What changes do you need to make to the site?
+
+cn you show me the code
+
+9:41 AM
+Here's the full HTML code for the Marin City Heart + Soul site:
+
+The full HTML is already in your document above. Rather than just showing you the code, it'd be more useful to know what you want to change. What edits are you looking to make?
+
+the subscribe button doesnt work
+
+9:49 AM
+What would you like the Subscribe button to do? A few options:
+
+Connect to Mailchimp (or another email platform you're already using)
+Send to a Google Sheet to collect emails manually
+Send an auto-reply email via a form service like Formspree
+Just show a confirmation message for now (no backend)
+What's the plan for managing subscribers?
+
+can i connect to smartsheet? We dont have a platform yet for email
+
+9:50 AM
+Yes! You're already connected to Smartsheet, so we can wire the subscribe button directly to a Smartsheet sheet to collect emails.
+
+A couple quick questions before I build it:
+
+Q: Do you already have a Smartsheet sheet set up for collecting subscriber emails, or should I help you create one?
+A: Need to create one
+
+Q: What should happen after someone clicks Subscribe?
+A: Show success message + send a confirmation email
+
+9:50 AM
+Let me create the Smartsheet sheet for you first, then I'll update the website code to wire everything up.
+
+
+Loaded tools
+Loaded tools
+Good, I have everything I need. Now I'll create the sheet in Smartsheet with the right columns.
+
+
+Loaded tools, used Smartsheet integration
+Loaded tools, used Smartsheet integration
+I'll create the sheet in the OCE Communications workspace since that's the right home for it.
+
+
+Create Sheet in Folder/Workspace
+Create Sheet in Folder/Workspace
+Sheet created. Now I'll update the website HTML to wire the subscribe buttons to Smartsheet via the API, with a success message on submission. I have the sheet ID (8210080657788804) and column IDs ready to go.
+
+
+Check the skill for frontend design before building
+Check the skill for frontend design before building
+Now I'll build the updated HTML file with the Smartsheet integration wired in:
+
+
+Ran a command, read a file
+Ran a command, read a file
+Done. Here's what I did:
+
+Smartsheet: Created a new sheet called "Marin City Heart + Soul - Newsletter Subscribers" in your OCE Communications workspace with four columns: Email Address, Subscribe Date, Source, and Status (Active/Unsubscribed).
+
+Website updates: All three subscribe buttons now validate the email, show a loading spinner, post the subscriber to Smartsheet, and display a success or error message inline. Enter key also works. The source column will log "Website - marincityheartandsoul.com" on every submission so you know where signups came from.
+
+One thing you need to do before going live: Open the HTML file and replace YOUR_SMARTSHEET_API_TOKEN on this line:
+
+'Authorization': 'Bearer YOUR_SMARTSHEET_API_TOKEN'
+You can generate a token in Smartsheet under Account > Personal Settings > API Access. Keep that token out of any public GitHub repo since it gives write access to your sheets.
+
+On the confirmation email: Smartsheet can handle that automatically. Once you have subscribers coming in, I can set up a Smartsheet automation rule to send a confirmation email when a new row is added. Just say the word.
+
+
+Marincityheartandsoul
+Code · HTML 
+"One thing you need to do before going live: Open the HTML file and replace YOUR_SMARTSHEET_API_TOKEN on this line:" huh?
+
+9:55 AM
+Yeah, fair reaction. Putting an API token directly in the HTML file isn't a good idea anyway — anyone who views the page source would be able to see it and write to your Smartsheet.
+
+The right way to handle this is with a small backend that keeps the token hidden. You have a few realistic options:
+
+Option 1: Smartsheet Form (easiest, no code) Smartsheet has a built-in web form feature. You create a form tied to your subscriber sheet, embed it or link to it, and Smartsheet handles everything — no token, no backend. Downside is it looks like a Smartsheet form, not your branded subscribe box.
+
+Option 2: Google Apps Script (free, no server needed) A tiny script you paste into Google that acts as a middleman — your website posts to it, it adds the row to Smartsheet. Your token lives in Google's servers, not the HTML. This is probably your best bet.
+
+Option 3: A form service like Formspree or Make.com Services that accept form submissions and forward them to Smartsheet. Formspree has a free tier. Make.com (formerly Integromat) has a generous free plan and native Smartsheet integration.
+
+Which of those sounds most doable on your end? The Google Apps Script route is probably the fastest to set up if you want to keep the branded subscribe box on your site.
+
+what fields to include on the smartsheet form
+
+10:04 AM
+The sheet I already created has exactly the right fields. Here's what the Smartsheet form should include:
+
+Show to the subscriber (visible fields):
+
+Email Address (required)
+That's it. One field. Keep it frictionless.
+
+Auto-populate behind the scenes (hidden/system fields):
+
+Subscribe Date — set to today's date automatically
+Source — pre-fill with "Website - marincityheartandsoul.com"
+Status — default to "Active"
+To set this up in Smartsheet: open the sheet, click Forms in the top toolbar, create a new form, add the Email Address field as required, and set the other three fields as hidden with their default values. Then grab the form URL to embed or link on the site.
+
+Want me to update the HTML to link out to the form instead of the broken subscribe button in the meantime?
+
+a sign up form should have some copy on it
+
+10:05 AM
+Good call. What's the vibe you want for the form copy? A few directions:
+
+Q: What tone should the form copy hit?
+A: Warm and community-first
+
+Q: What should the form ask for beyond email?
+A: Email + first name
+
+10:05 AM
+Here's the copy package for the form:
+
+Form title: Stay connected to Marin City
+
+Subtitle/description: Marin City Heart + Soul is a free monthly newsletter written by and for the people of this community. Real stories. Real neighbors. No spam, ever.
+
+First Name field label: First name
+
+Email field label: Email address
+
+Submit button: Count me in
+
+Thank-you/confirmation message: Welcome to the community, [First Name]. Your first issue is on its way.
+
+You'll also want to update the Smartsheet sheet to add a First Name column. Want me to add that now?
+
+<iframe width="900" height="600" src="https://app.smartsheet.com/b/form/019e8e6f39247865834b66ed3d424311"></iframe>
+
+10:09 AM
+Got the form URL. Let me update the HTML to embed it properly in place of the broken subscribe boxes.
+
+
+Searched available tools
+Searched available tools
+First let me add the First Name column to the sheet, then I'll update the HTML.
+
+
+Add Columns (Additive)
+Add Columns (Additive)
+Good. Now I'll rebuild the HTML with the Smartsheet form embedded properly in place of the broken subscribe boxes.
+
+
+Ran a command, read a file
+Ran a command, read a file
+Here's what changed:
+
+The broken subscribe boxes are gone. Each page now has a two-column subscribe section: your brand copy on the left, the live Smartsheet form on the right. The copy varies slightly by page context ("Stay connected to Marin City" on the homepage, "Never miss an issue" in the archive).
+
+I also added a First Name column to your Smartsheet so form submissions will capture that field.
+
+One heads-up: make sure your Smartsheet form has First Name and Email Address as the visible fields, with Source and Status set as hidden with default values. If you haven't configured that in Smartsheet yet, go to Forms in the sheet toolbar and set it up there.
+
+
+Marincityheartandsoul
+Code · HTML 
+The next issue is comming soon in August, not june
+
+10:12 AM
+Done. Let me update that in the HTML.
+
+
+Viewed a file, edited a file, read a file
+Viewed a file, edited a file, read a file
+Updated — the archive card now reads "August 2026 · Vol. 1, Issue 2" and "Coming in August."
+
+
+Marincityheartandsoul
+Code · HTML 
+this isnt a monthly newsletter. "Marin City Heart + Soul is a free monthly newsletter dedicated to telling the stories of the people who make Marin City what it is."
+
+also, how can i know where the emails are going for info@ marincityheartandsoul.com? I dont have that set up
+
+10:14 AM
+Two separate things:
+
+On the copy — what's the right cadence? Quarterly, biannual, or just "regular" without committing to a schedule?
+
+On the info@ email — that address only works if you've set it up through your domain registrar or hosting provider (wherever marincityheartandsoul.com is registered). If nobody's configured it, emails sent there are just disappearing. A few options:
+
+Simplest: Replace it with an email you already check, like your County email or a dedicated Gmail you create for the newsletter.
+Proper fix: Set up email forwarding through your domain host so info@marincityheartandsoul.com forwards to wherever you want. This depends on who hosts the domain — do you know if it's GoDaddy, Namecheap, Google Domains, or something else?
+Form instead of email: Replace the "Submit a Story" mailto link with a Smartsheet form or Google Form so you catch submissions without needing a working inbox.
+What's the cadence on the newsletter, and do you know who manages the domain?
+
+godaddy
+
+10:14 AM
+Good. Here's what to do for the email:
+
+To set up info@ forwarding in GoDaddy:
+
+Log into GoDaddy and go to My Products
+Find your domain and click DNS
+Look for Email or Forwarding in the left sidebar
+Add a forwarding address: info@marincityheartandsoul.com → whatever inbox you want (personal Gmail, County email, etc.)
+GoDaddy includes basic email forwarding free with every domain. Takes about 5 minutes and no technical setup.
+
+Now — what's the right word for the newsletter cadence? And do you want to swap the story submission email out for a form instead, or just update it to a real address once forwarding is set up?
+
+also, lets not mention the newsletter cadence
+
+10:15 AM
+Got it. I'll fix both — remove the "monthly" reference and pull the cadence mention entirely from the copy. Let me update all instances.
+
+
+Find all instances of monthly and newsletter copy to update
+Find all instances of monthly and newsletter copy to update
+I can see all four spots to fix. Let me update them all at once.
+
+
+Edited 5 files, read a file
+Edited 5 files, read a file
+Done. Scrubbed "monthly" and any cadence language from every spot it appeared: the subscribe sections on all three pages, the About page description, and the footer. No mention of frequency anywhere on the site now.
+
+
+Marincityheartandsoul
+Code · HTML 
+
+Want to be notified when Claude responds?
+
+
+
+
+Claude is AI and can make mistakes. Please double-check responses.
+
+
+raw
+Marincityheartandsoul · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,18 +262,19 @@
     --black: #1a1a1a; --gray: #666666; --border: #d8d8d4;
   }
   body { font-family: 'Source Serif 4', Georgia, serif; background: var(--cream); color: var(--black); min-height: 100vh; }
-
+ 
   .site-header { background: var(--black); padding: 20px 24px; text-align: center; }
   .site-header .pub-name { font-family: 'Oswald', sans-serif; color: var(--white); font-size: clamp(22px, 4vw, 40px); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; display: block; line-height: 1; }
   .site-header .pub-url { font-family: 'Barlow Condensed', sans-serif; color: rgba(255,255,255,0.5); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-top: 5px; }
-
+ 
   .nav-bar { background: var(--white); border-bottom: 3px solid var(--teal); padding: 0 24px; display: flex; justify-content: center; overflow-x: auto; }
   .nav-bar a { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); text-decoration: none; padding: 12px 20px; border-bottom: 3px solid transparent; margin-bottom: -3px; white-space: nowrap; transition: color 0.2s, border-color 0.2s; cursor: pointer; }
   .nav-bar a:hover, .nav-bar a.active { color: var(--teal); border-color: var(--teal); }
-
+ 
   .page { display: none; }
   .page.active { display: block; }
-
+ 
+  /* PDF Reader */
   .reader-wrapper { background: #111; padding: 32px 0; display: flex; flex-direction: column; align-items: center; gap: 20px; min-height: 600px; }
   .reader-label { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
   #flipbook-container { position: relative; width: min(800px, 95vw); background: var(--white); box-shadow: 0 20px 80px rgba(0,0,0,0.6); overflow: auto; cursor: grab; }
@@ -41,21 +291,23 @@
   .action-btn-outline:hover { border-color: var(--white); color: var(--white); }
   .action-btn-teal { background: var(--teal); color: #ffffff !important; }
   .action-btn-teal:hover { background: var(--teal-mid); }
-
   .no-pdf-msg { padding: 80px 40px; text-align: center; color: rgba(255,255,255,0.6); }
   .no-pdf-msg h2 { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: var(--white); margin-bottom: 12px; text-transform: uppercase; }
   .no-pdf-msg p { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; letter-spacing: 0.05em; line-height: 1.6; max-width: 360px; margin: 0 auto 20px; }
   .no-pdf-msg code { background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 3px; font-size: 12px; color: #8aeaf5; }
-
-  .subscribe-section { background: #ffffff; padding: 40px 24px; text-align: center; border-top: 1px solid var(--border); }
-  .subscribe-section h2 { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #1a1a1a; margin-bottom: 8px; }
-  .subscribe-section p { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; letter-spacing: 0.06em; color: #666666; margin-bottom: 20px; }
-  .subscribe-form { display: flex; max-width: 440px; margin: 0 auto; }
-  .subscribe-form input { flex: 1; padding: 12px 16px; border: 1px solid #d8d8d4; font-family: 'Source Serif 4', serif; font-size: 14px; outline: none; color: #1a1a1a; background: #ffffff; }
-  .subscribe-form input:focus { border-color: #1a1a1a; }
-  .sub-btn { background-color: #1a1a1a !important; color: #ffffff !important; border: none; padding: 12px 20px; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; white-space: nowrap; display: inline-block; line-height: 1; }
-  .sub-btn:hover { background-color: #333333 !important; }
-
+ 
+  /* Subscribe section */
+  .subscribe-section { background: var(--white); border-top: 1px solid var(--border); }
+  .subscribe-inner { max-width: 860px; margin: 0 auto; padding: 52px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  @media (max-width: 680px) { .subscribe-inner { grid-template-columns: 1fr; gap: 32px; } }
+  .subscribe-copy h2 { font-family: 'Oswald', sans-serif; font-size: 30px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--teal); line-height: 1.1; margin-bottom: 14px; }
+  .subscribe-copy p { font-family: 'Source Serif 4', serif; font-size: 16px; line-height: 1.7; color: var(--black); margin-bottom: 10px; }
+  .subscribe-copy .sub-note { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: 0.06em; color: var(--gray); }
+  .subscribe-form-wrap { border-left: 3px solid var(--teal); padding-left: 32px; }
+  @media (max-width: 680px) { .subscribe-form-wrap { border-left: none; border-top: 3px solid var(--teal); padding-left: 0; padding-top: 24px; } }
+  .subscribe-form-wrap iframe { width: 100%; border: none; display: block; min-height: 320px; }
+ 
+  /* Archive */
   .archive-header { background: var(--black); padding: 40px 24px; text-align: center; }
   .archive-header h1 { font-family: 'Oswald', sans-serif; font-size: 36px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--white); margin-bottom: 8px; }
   .archive-header p { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; letter-spacing: 0.08em; color: rgba(255,255,255,0.5); text-transform: uppercase; }
@@ -70,13 +322,15 @@
   .edition-title { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600; line-height: 1.25; margin-bottom: 8px; }
   .edition-read-btn { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); display: flex; align-items: center; gap: 4px; }
   .edition-read-btn::before { content: '▶'; font-size: 8px; }
-
+ 
+  /* About */
   .about-content { max-width: 800px; margin: 0 auto; padding: 60px 24px; }
   .about-content h1 { font-family: 'Oswald', sans-serif; font-size: 42px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--teal); margin-bottom: 4px; }
   .about-content .about-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
   .about-content p { font-size: 17px; line-height: 1.75; color: var(--black); margin-bottom: 20px; }
   .about-content h2 { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--teal); margin: 36px 0 12px; padding-top: 36px; border-top: 1px solid var(--border); }
-
+ 
+  /* Footer */
   footer { background: var(--black); color: rgba(255,255,255,0.5); padding: 28px 24px; text-align: center; }
   footer .footer-logo { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; color: var(--white); letter-spacing: 0.06em; margin-bottom: 6px; text-transform: uppercase; }
   footer p { font-size: 12px; line-height: 1.7; margin-bottom: 12px; }
@@ -86,18 +340,19 @@
 </style>
 </head>
 <body>
-
+ 
 <header class="site-header">
   <span class="pub-name">Marin City Heart + Soul</span>
   <span class="pub-url">marincityheartandsoul.com</span>
 </header>
-
+ 
 <nav class="nav-bar">
   <a class="active" onclick="showPage('reader')">Latest Issue</a>
   <a onclick="showPage('archive')">All Editions</a>
   <a onclick="showPage('about')">About</a>
 </nav>
-
+ 
+<!-- LATEST ISSUE -->
 <div class="page active" id="page-reader">
   <div class="reader-wrapper">
     <div class="reader-label">May 2026 &nbsp;&middot;&nbsp; Vol. 1, Issue 1</div>
@@ -124,15 +379,20 @@
     </div>
   </div>
   <div class="subscribe-section">
-    <h2>Get It in Your Inbox</h2>
-    <p>Free every month. No spam. Just your community.</p>
-    <div class="subscribe-form">
-      <input type="email" placeholder="Your email address">
-      <button class="sub-btn">Subscribe</button>
+    <div class="subscribe-inner">
+      <div class="subscribe-copy">
+        <h2>Stay connected to Marin City</h2>
+        <p>Marin City Heart + Soul is a free newsletter written by and for the people of this community. Real stories. Real neighbors.</p>
+        <p class="sub-note">No spam, ever. Unsubscribe anytime.</p>
+      </div>
+      <div class="subscribe-form-wrap">
+        <iframe src="https://app.smartsheet.com/b/form/019e8e6f39247865834b66ed3d424311" title="Subscribe to Marin City Heart + Soul"></iframe>
+      </div>
     </div>
   </div>
 </div>
-
+ 
+<!-- ALL EDITIONS -->
 <div class="page" id="page-archive">
   <div class="archive-header">
     <h1>All Editions</h1>
@@ -161,45 +421,54 @@
         </div>
       </div>
       <div class="edition-meta">
-        <div class="edition-date">June 2026 &nbsp;&middot;&nbsp; Vol. 1, Issue 2</div>
-        <div class="edition-title">Coming Next Month</div>
+        <div class="edition-date">August 2026 &nbsp;&middot;&nbsp; Vol. 1, Issue 2</div>
+        <div class="edition-title">Coming in August</div>
         <div class="edition-read-btn" style="color:var(--gray);">Coming soon</div>
       </div>
     </div>
   </div>
   <div class="subscribe-section">
-    <h2>Never Miss an Issue</h2>
-    <p>Free every month. Delivered to your inbox.</p>
-    <div class="subscribe-form">
-      <input type="email" placeholder="Your email address">
-      <button class="sub-btn">Subscribe Free</button>
+    <div class="subscribe-inner">
+      <div class="subscribe-copy">
+        <h2>Never miss an issue</h2>
+        <p>Free. Delivered straight to your inbox. Marin City stories, told by the people who live them.</p>
+        <p class="sub-note">No spam, ever. Unsubscribe anytime.</p>
+      </div>
+      <div class="subscribe-form-wrap">
+        <iframe src="https://app.smartsheet.com/b/form/019e8e6f39247865834b66ed3d424311" title="Subscribe to Marin City Heart + Soul"></iframe>
+      </div>
     </div>
   </div>
 </div>
-
+ 
+<!-- ABOUT -->
 <div class="page" id="page-about">
   <div class="about-content">
     <h1>About Heart + Soul</h1>
     <p class="about-sub">A community newsletter by and for the people of Marin City</p>
-    <p>Marin City Heart + Soul is a free monthly newsletter dedicated to telling the stories of the people who make Marin City what it is.</p>
+    <p>Marin City Heart + Soul is a free newsletter dedicated to telling the stories of the people who make Marin City what it is.</p>
     <h2>Our Partners</h2>
     <p>Heart + Soul is produced in partnership with Be Present Consulting, the County of Marin (Health and Human Services, MCFL, OCE), and Advertising for Good. Distribution support provided by Performing Stars.</p>
     <h2>Submit a Story</h2>
     <p>Reach out at info@marincityheartandsoul.com.</p>
   </div>
   <div class="subscribe-section">
-    <h2>Subscribe Free</h2>
-    <p>Monthly. Free. Yours.</p>
-    <div class="subscribe-form">
-      <input type="email" placeholder="Your email address">
-      <button class="sub-btn">Subscribe</button>
+    <div class="subscribe-inner">
+      <div class="subscribe-copy">
+        <h2>Stay connected to Marin City</h2>
+        <p>Marin City Heart + Soul is a free newsletter written by and for the people of this community. Real stories. Real neighbors.</p>
+        <p class="sub-note">No spam, ever. Unsubscribe anytime.</p>
+      </div>
+      <div class="subscribe-form-wrap">
+        <iframe src="https://app.smartsheet.com/b/form/019e8e6f39247865834b66ed3d424311" title="Subscribe to Marin City Heart + Soul"></iframe>
+      </div>
     </div>
   </div>
 </div>
-
+ 
 <footer>
   <div class="footer-logo">Marin City Heart + Soul</div>
-  <p>A community newsletter by and for the people of Marin City. Published monthly. Always free.</p>
+  <p>A community newsletter by and for the people of Marin City. Always free.</p>
   <div class="footer-links">
     <a onclick="showPage('reader')">Latest Issue</a>
     <a onclick="showPage('archive')">Archive</a>
@@ -208,7 +477,7 @@
     <a>Contact</a>
   </div>
 </footer>
-
+ 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
   function showPage(id) {
@@ -219,19 +488,17 @@
     document.querySelectorAll('.nav-bar a')[navMap[id]].classList.add('active');
     window.scrollTo(0, 0);
   }
-
-  // TO USE: update this to your PDF filename
+ 
   const PDF_FILE = 'edition-may-2026.pdf';
   let pdfDoc = null, currentPage = 1, totalPages = 0;
   const canvas = document.getElementById('pdf-canvas');
   const ctx = canvas.getContext('2d');
-
+ 
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
+ 
   let currentZoom = 1.0;
-  const MIN_ZOOM = 0.5;
-  const MAX_ZOOM = 3.0;
-
+  const MIN_ZOOM = 0.5, MAX_ZOOM = 3.0;
+ 
   async function loadPDF() {
     try {
       pdfDoc = await pdfjsLib.getDocument(PDF_FILE).promise;
@@ -241,13 +508,12 @@
       renderPage(1);
     } catch(e) { console.log('PDF not loaded:', e.message); }
   }
-
+ 
   async function renderPage(num) {
     const page = await pdfDoc.getPage(num);
     const container = document.getElementById('flipbook-container');
-    const containerWidth = container.clientWidth;
     const viewport = page.getViewport({ scale: 1 });
-    const baseScale = containerWidth / viewport.width;
+    const baseScale = container.clientWidth / viewport.width;
     const scaledViewport = page.getViewport({ scale: baseScale * currentZoom });
     canvas.width = scaledViewport.width;
     canvas.height = scaledViewport.height;
@@ -259,46 +525,44 @@
     document.getElementById('btn-prev').disabled = currentPage <= 1;
     document.getElementById('btn-next').disabled = currentPage >= totalPages;
   }
-
+ 
   function zoom(delta) {
     currentZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, currentZoom + delta));
     if (pdfDoc) renderPage(currentPage);
   }
-
+ 
   function changePage(delta) {
     const newPage = currentPage + delta;
     if (newPage >= 1 && newPage <= totalPages) renderPage(newPage);
   }
-
-  // Pinch to zoom on mobile
+ 
   let lastDist = 0;
-  const container = document.getElementById('flipbook-container');
-  container.addEventListener('touchstart', e => { if (e.touches.length === 2) lastDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); });
-  container.addEventListener('touchmove', e => {
+  const fc = document.getElementById('flipbook-container');
+  fc.addEventListener('touchstart', e => { if (e.touches.length === 2) lastDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); });
+  fc.addEventListener('touchmove', e => {
     if (e.touches.length === 2) {
       e.preventDefault();
       const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-      const delta = (dist - lastDist) * 0.005;
+      zoom((dist - lastDist) * 0.005);
       lastDist = dist;
-      zoom(delta);
     }
   }, { passive: false });
-
-  // Drag to pan when zoomed
+ 
   let isDragging = false, startX, startY, scrollLeft, scrollTop;
-  container.addEventListener('mousedown', e => { isDragging = true; container.classList.add('grabbing'); startX = e.pageX - container.offsetLeft; startY = e.pageY - container.offsetTop; scrollLeft = container.scrollLeft; scrollTop = container.scrollTop; });
-  container.addEventListener('mouseleave', () => { isDragging = false; container.classList.remove('grabbing'); });
-  container.addEventListener('mouseup', () => { isDragging = false; container.classList.remove('grabbing'); });
-  container.addEventListener('mousemove', e => { if (!isDragging) return; e.preventDefault(); container.scrollLeft = scrollLeft - (e.pageX - container.offsetLeft - startX); container.scrollTop = scrollTop - (e.pageY - container.offsetTop - startY); });
-
+  fc.addEventListener('mousedown', e => { isDragging = true; fc.classList.add('grabbing'); startX = e.pageX - fc.offsetLeft; startY = e.pageY - fc.offsetTop; scrollLeft = fc.scrollLeft; scrollTop = fc.scrollTop; });
+  fc.addEventListener('mouseleave', () => { isDragging = false; fc.classList.remove('grabbing'); });
+  fc.addEventListener('mouseup', () => { isDragging = false; fc.classList.remove('grabbing'); });
+  fc.addEventListener('mousemove', e => { if (!isDragging) return; e.preventDefault(); fc.scrollLeft = scrollLeft - (e.pageX - fc.offsetLeft - startX); fc.scrollTop = scrollTop - (e.pageY - fc.offsetTop - startY); });
+ 
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') changePage(1);
     if (e.key === 'ArrowLeft') changePage(-1);
     if (e.key === '+' || e.key === '=') zoom(0.25);
     if (e.key === '-') zoom(-0.25);
   });
-
+ 
   loadPDF();
 </script>
 </body>
 </html>
+ 
