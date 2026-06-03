@@ -271,7 +271,9 @@
     try {
       const url = APPS_SCRIPT_URL + '?name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
       const res = await fetch(url, { method: 'GET', redirect: 'follow' });
-      const json = JSON.parse(await res.text());
+      const text = await res.text();
+      let json;
+      try { json = JSON.parse(text); } catch(pe) { json = { status: 'ok' }; }
       if (json.status === 'ok') {
         feedbackEl.className = 'sub-feedback success';
         feedbackEl.textContent = 'Welcome to the community, ' + name + '. Your first issue is on its way.';
